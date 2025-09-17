@@ -1,0 +1,3 @@
+npx json-server ./mock/database.json
+npx json-server ./mock/database.json --port 9090
+npm install --force, or --legacy-peer-deps
