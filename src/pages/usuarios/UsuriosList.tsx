@@ -80,10 +80,9 @@ export const UsuariosList: React.FC = () => {
       <Table>
       <TableHead>
         <TableRow>
-          <TableCell>Nombre completo</TableCell>
-          <TableCell>Email</TableCell>
-          <TableCell>Teléfono</TableCell>
-          <TableCell>Roles</TableCell>
+          <TableCell>Id</TableCell>
+          <TableCell>Nombre</TableCell>
+          <TableCell>Correo</TableCell>
           <TableCell>Estado</TableCell>
           <TableCell width={100}>Opciones</TableCell>
         </TableRow>
@@ -91,12 +90,10 @@ export const UsuariosList: React.FC = () => {
       <TableBody>
         {rows.map(row => (
           <TableRow key={row.id}>
-            <TableCell>{row.name}</TableCell>
-            <TableCell>{row.email}</TableCell>
-            <TableCell>{row.phone || 'N/A'}</TableCell>
-            <TableCell>{row.roles.map(role => role.name).join(', ') || 'N/A'}</TableCell> {/* Mostrar roles */}
+            <TableCell>{row.nombre}</TableCell>
+            <TableCell>{row.correo}</TableCell>            
             {
-            row.status == true ?
+            row.estado == true ?
               <TableCell>Activo</TableCell>
               :
               <TableCell>Inactivo</TableCell> 

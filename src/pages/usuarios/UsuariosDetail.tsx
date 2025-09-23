@@ -13,10 +13,8 @@ import { UsuariosService } from '../../shared/services/api/usuarios/UsuariosServ
 
 // Esquema de validación con Zod
 const userSchema = z.object({
-  name: z.string().min(1, 'Nombre es requerido'),
-  email: z.string().email('Email inválido').min(1, 'Email es requerido'),
-  phone: z.string().optional(),
-  photo: z.string().optional(),
+  nombre: z.string().min(1, 'Nombre es requerido'),
+  correo: z.string().email('Email inválido').min(1, 'Email es requerido'),
 });
 
 type UserFormData = z.infer<typeof userSchema>;
@@ -37,10 +35,8 @@ export const UsuariosDetail: React.FC = () => {
   } = useForm<UserFormData>({
     resolver: zodResolver(userSchema),
     defaultValues: {
-      name: '',
-      email: '',
-      phone: '',
-      photo: '',
+      nombre: '',
+      correo: '',
     },
   });
 
@@ -56,21 +52,17 @@ export const UsuariosDetail: React.FC = () => {
             alert(result.message);
             navigate('/usuarios');
           } else {
-            setNombre(result.name);
+            setNombre(result.nombre);
             // Poblar formulario con datos existentes
-            setValue('name', result.name || '');
-            setValue('email', result.email || '');
-            setValue('phone', result.phone || '');
-            setValue('photo', result.photo || '');
+            setValue('nombre', result.nombre || '');
+            setValue('correo', result.correo || '');
           }
         });
     } else {
       // Limpiar formulario para nuevo usuario
       reset({
-        name: '',
-        email: '',
-        phone: '',
-        photo: '',
+        nombre: '',
+        correo: '',
       });
     }
   }, [id, setValue, reset, navigate]);
@@ -89,7 +81,7 @@ export const UsuariosDetail: React.FC = () => {
             if (shouldClose) {
               navigate('/usuarios');
             } else {
-              navigate(`/usuarios/detalle/${result}`);
+              navigate(`/usuarios/${result}`);
             }
           }
         });
@@ -157,12 +149,12 @@ export const UsuariosDetail: React.FC = () => {
         <Grid container spacing={2}>
           <Grid size={{ xs: 12, sm: 12, md: 6, lg: 4, xl: 2 }}>
             <TextField
-              {...register('name')}
+              {...register('nombre')}
               fullWidth
               label="Nombre"
               disabled={isLoading}
-              error={!!errors.name}
-              helperText={errors.name?.message}
+              error={!!errors.nombre}
+              helperText={errors.nombre?.message}
             />
           </Grid>
         </Grid>
@@ -170,42 +162,20 @@ export const UsuariosDetail: React.FC = () => {
         <Grid container spacing={2}>
           <Grid size={{ xs: 12, sm: 12, md: 6, lg: 4, xl: 2 }}>
             <TextField
-              {...register('email')}
+              {...register('correo')}
               fullWidth
               label="Email"
               type="email"
               disabled={isLoading}
-              error={!!errors.email}
-              helperText={errors.email?.message}
+              error={!!errors.correo}
+              helperText={errors.correo?.message}
             />
           </Grid>
         </Grid>
 
-        <Grid container spacing={2}>
-          <Grid size={{ xs: 12, sm: 12, md: 6, lg: 4, xl: 2 }}>
-            <TextField
-              {...register('phone')}
-              fullWidth
-              label="Teléfono"
-              disabled={isLoading}
-              error={!!errors.phone}
-              helperText={errors.phone?.message}
-            />
-          </Grid>
-        </Grid>
 
-        <Grid container spacing={2}>
-          <Grid size={{ xs: 12, sm: 12, md: 6, lg: 4, xl: 2 }}>
-            <TextField
-              {...register('photo')}
-              fullWidth
-              label="URL de foto"
-              disabled={isLoading}
-              error={!!errors.photo}
-              helperText={errors.photo?.message}
-            />
-          </Grid>
-        </Grid>
+
+      
       </Paper>
     </LayoutBaseDePagina>
   );

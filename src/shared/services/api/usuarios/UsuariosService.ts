@@ -4,12 +4,9 @@ import { Api } from '../axios-config';
 
 export interface IListaUsuarios {
   id: number;
-  name: string;
-  email: string;
-  photo: string | null;
-  phone: string | null;
-  status: boolean;
-  roles: IRole[];
+  nombre: string;
+  correo: string;
+  estado: boolean;
 }
 
 export interface IRole {
@@ -22,11 +19,9 @@ export interface IRole {
 
 export interface IDetalleUsuarios {
     id?: number;
-    name: string;
-    email: string;
-    phone?: string | null;
-    photo?: string | null;
-    status?: boolean;
+    nombre: string;
+    correo: string;
+    estado?: boolean;
 }
 
 type TContactoTotalCount = {
@@ -64,13 +59,13 @@ type TContactoTotalCount = {
 
   const getAll = async (): Promise<{ data: IListaUsuarios[], totalCount: number } | Error> => {
     try {
-        const { data } = await Api.get('/users/list');
+        const { data } = await Api.get('/ad/usuarios/');
         console.info("USERS RESPONSE: ", data);
         
         if (data) {
             return {
-                data: data.data, // Aquí mapeamos la data recibida
-                totalCount: data.data.length, // Asumiendo que no tienes paginación en el backend
+                data: data, // Aquí mapeamos la data recibida
+                totalCount: data.length, // Asumiendo que no tienes paginación en el backend
             };
         }
 
@@ -84,10 +79,10 @@ type TContactoTotalCount = {
 
 const getById = async (id: number): Promise<IDetalleUsuarios | Error> => {
   try {
-      const { data } = await Api.get(`/users/find/${id}`);
+      const { data } = await Api.get(`/ad/usuarios/${id}/`);
       console.info("USER", data)
       if (data) {
-          return data.data;
+          return data;
       }
       return new Error('Error al obtener un usuario');
   } catch (error) {
