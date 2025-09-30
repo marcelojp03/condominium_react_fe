@@ -1,116 +1,65 @@
 import { useEffect } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-
+import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { useDrawerContext } from '../shared/contexts';
-import {
-  // Módulos de condominio utilizados
-  DashboardPage,
-  CondosList,
-  CondoForm,
-  UnitsList,
-  UnitForm,
-  UnitDetail,
-  AmenitiesList,
-  FeesList,
-  PaymentsList,
-  FinesList,
-  NoticesList,
-  NoticeForm,
-  IncidentsList,
-  IncidentDetail,
-} from '../pages';
-import { UsuariosList } from '../pages/usuarios/UsuriosList';
-import { UsuariosDetail } from '../pages/usuarios/UsuariosDetail';
+import { Login } from '../pages/auth/Login';
+import { LogoutHandler } from '../shared/components/LogoutHandler';
+import { LayoutBaseDePagina } from '@/shared/layouts';
+import { MenuLateral } from '@/shared/components';
+import { UsuariosList } from '@/pages/usuarios/UsuariosList';
+import { UsuariosDetail } from '@/pages/usuarios/UsuariosDetail';
+import { Dashboard } from '@mui/icons-material';
+import { DashboardPage } from '@/pages/condominios';
+import { RolesList } from '@/pages/roles/RolesList';
+import { RolesDetail } from '@/pages/roles/RolesDetail';
 
-export const AppRoutes = () => {
+const MainLayout = () => {
   const { setDrawerOptions } = useDrawerContext();
 
   useEffect(() => {
     setDrawerOptions([
-      {
-        icon: 'home',
-        path: '/condominio-dashboard',
-        label: 'Dashboard',
-      },
-      {
-        icon: 'apartment',
-        path: '/condominios',
-        label: 'Condominios',
-      },
-      {
-        icon: 'domain',
-        path: '/unidades',
-        label: 'Unidades',
-      },
-      {
-        icon: 'pool',
-        path: '/areas',
-        label: 'Áreas Comunes',
-      },
-      {
-        icon: 'attach_money',
-        path: '/finanzas',
-        label: 'Finanzas',
-      },
-      {
-        icon: 'campaign',
-        path: '/avisos',
-        label: 'Avisos',
-      },
-      {
-        icon: 'report_problem',
-        path: '/incidentes',
-        label: 'Incidentes',
-      },
-      {
-        icon: 'people',
-        path: '/usuarios',
-        label: 'Usuarios',
-      },
+      { icon: 'home', path: '/condominio-dashboard', label: 'Dashboard' },
+      { icon: 'apartment', path: '/condominios', label: 'Condominios' },
+      { icon: 'domain', path: '/unidades', label: 'Unidades' },
+      { icon: 'pool', path: '/areas', label: 'Áreas Comunes' },
+      { icon: 'attach_money', path: '/finanzas', label: 'Finanzas' },
+      { icon: 'campaign', path: '/avisos', label: 'Avisos' },
+      { icon: 'report_problem', path: '/incidentes', label: 'Incidentes' },
+      { icon: 'people', path: '/usuarios', label: 'Usuarios' },
     ]);
-  }, []);
+  }, [setDrawerOptions]);
 
   return (
+    <MenuLateral>
+      <LayoutBaseDePagina titulo="">
+        <Outlet />
+      </LayoutBaseDePagina>
+    </MenuLateral>
+  );
+};
+
+export const AppRoutes = () => {
+  return (
     <Routes>
-      <Route path="/condominio-dashboard" element={<DashboardPage />} />
-      
-      {/* Condominios */}
-      <Route path="/condominios" element={<CondosList />} />
-      <Route path="/condominios/nuevo" element={<CondoForm />} />
-      <Route path="/condominios/:id/editar" element={<CondoForm />} />
-      
-      {/* Unidades */}
-      <Route path="/unidades" element={<UnitsList />} />
-      <Route path="/unidades/nueva" element={<UnitForm />} />
-      <Route path="/unidades/:id/editar" element={<UnitForm />} />
-      <Route path="/unidades/:id" element={<UnitDetail />} />
-      
-      {/* Áreas Comunes */}
-      <Route path="/areas" element={<AmenitiesList />} />
-      
-      {/* Finanzas */}
-      <Route path="/finanzas" element={<FeesList />} />
-      <Route path="/finanzas/pagos" element={<PaymentsList />} />
-      <Route path="/finanzas/multas" element={<FinesList />} />
-      
-      {/* Avisos */}
-      <Route path="/avisos" element={<NoticesList />} />
-      <Route path="/avisos/nuevo" element={<NoticeForm />} />
-      <Route path="/avisos/:id/editar" element={<NoticeForm />} />
-      
-      {/* Incidentes */}
-      <Route path="/incidentes" element={<IncidentsList />} />
-      <Route path="/incidentes/:id" element={<IncidentDetail />} />
-      
-      {/* Usuarios */}
-      <Route path="/usuarios" element={<UsuariosList />} />
-      <Route path="/usuarios/detalle/:id" element={<UsuariosDetail />} />
-      
-      {/* Legacy routes */}
-      <Route path="/dashboard" element={<Navigate to="/condominio-dashboard" replace />} />
-      <Route path="/" element={<Navigate to="/condominio-dashboard" replace />} />
+      {/* Rutas públicas */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/logout" element={<LogoutHandler />} />
+
+      {/* Rutas privadas */}
+      <Route element={<MainLayout />}>
+        <Route path="/condominio-dashboard" element={<DashboardPage />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+
+        <Route path="/usuarios" element={<UsuariosList />} />
+        <Route path="/usuarios/detalle/:id" element={<UsuariosDetail />} />        
+
+        <Route path="/roles" element={<RolesList />} />
+        <Route path="/roles/detalle/:id" element={<RolesDetail />} />        
+
+
+      </Route>
 
       {/* Fallback */}
+      {/* <Route path="*" element={<Navigate to="/login" replace />} /> */}
       <Route path="*" element={<Navigate to="/condominio-dashboard" replace />} />
     </Routes>
   );

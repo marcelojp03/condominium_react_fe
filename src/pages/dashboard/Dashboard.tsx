@@ -3,7 +3,7 @@ import { Box, Card, CardContent, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 
 import { LayoutBaseDePagina } from '../../shared/layouts';
-import { TallasService } from '../../shared/services/api/tallas/TallasService';
+
 import { UsuariosService } from '../../shared/services/api/usuarios/UsuariosService';
 
 
@@ -17,16 +17,7 @@ export const Dashboard = () => {
     setIsLoadingCidades(true);
     setIsLoadingPessoas(true);
 
-    TallasService.getAll(1)
-      .then((result) => {
-        setIsLoadingCidades(false);
 
-        if (result instanceof Error) {
-          alert(result.message);
-        } else {
-          setTotalCountCidades(result.totalCount);
-        }
-      });
     UsuariosService.getAll()
       .then((result) => {
         setIsLoadingPessoas(false);

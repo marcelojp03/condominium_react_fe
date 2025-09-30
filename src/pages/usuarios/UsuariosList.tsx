@@ -33,6 +33,7 @@ export const UsuariosList: React.FC = () => {
     debounce(() => {
       UsuariosService.getAll() // Cambiado a UsuariosService
         .then((result) => {
+          console.log("UsuariosList::response:",result);
           setIsLoading(false);
 
           if (result instanceof Error) {
@@ -90,6 +91,7 @@ export const UsuariosList: React.FC = () => {
       <TableBody>
         {rows.map(row => (
           <TableRow key={row.id}>
+            <TableCell>{row.id}</TableCell>
             <TableCell>{row.nombre}</TableCell>
             <TableCell>{row.correo}</TableCell>            
             {

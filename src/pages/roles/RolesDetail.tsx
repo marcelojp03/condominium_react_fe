@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { LinearProgress, Paper, Typography, TextField, MenuItem } from '@mui/material';
+import { LinearProgress, Paper, Typography, TextField, MenuItem,Checkbox, FormControlLabel, FormGroup  } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 
 import { useNavigate, useParams } from 'react-router-dom';
@@ -12,27 +12,28 @@ import { LayoutBaseDePagina } from '../../shared/layouts';
 import { UsuariosService } from '../../shared/services/api/usuarios/UsuariosService';
 
 import { RolesService } from '../../shared/services/api/roles/RolesService';
+import { RecursosService } from '../../shared/services/api/recursos/RecursosService';
 import { Snackbar, Alert } from "@mui/material"; // 👈 importar
+import { IRecurso } from '@/shared/types/Recurso';
 
 // 📌 Esquema de validación con Zod
 const userSchema = z.object({
   nombre: z.string().min(1, 'Nombre es requerido'),
-  correo: z.string().email('Email inválido').min(1, 'Email es requerido'),
-  password: z.string().min(4, 'La contraseña debe tener al menos 4 caracteres'),
+  descripcion: z.string(),
   estado: z.enum(['activo', 'inactivo'], {
     required_error: 'El estado es requerido',
   }),
-  rol_id: z.string().min(1, 'Debe seleccionar un rol'),
+  subrecursos: z.array(z.number()).optional(),
 });
 
 type UserFormData = z.infer<typeof userSchema>;
 
-export const UsuariosDetail: React.FC = () => {
+export const RolesDetail: React.FC = () => {
   const { id = 'nuevo' } = useParams<'id'>();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [nombre, setNombre] = useState('');
-  const [roles, setRoles] = useState<{ id: number; nombre: string }[]>([]);
+  const [recursos, setRecursos] = useState<IRecurso[]>([]);
   
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const {
@@ -46,18 +47,17 @@ export const UsuariosDetail: React.FC = () => {
     resolver: zodResolver(userSchema),
     defaultValues: {
       nombre: '',
-      correo: '',
-      password: '',
+      descripcion: '',
       estado: 'activo',
-      rol_id: '',
+      subrecursos: [],
     },
   });
 
-// 🔹 Cargar roles
+// 🔹 Cargar recursos con sus subrecursos
   useEffect(() => {
-    RolesService.getAll().then((result) => {
+    RecursosService.getAll().then((result) => {
       if (!(result instanceof Error)) {
-        setRoles(result.data);
+        setRecursos(result.data as IRecurso[]);
       }
     });
   }, []);
@@ -66,36 +66,35 @@ useEffect(() => {
   if (id !== 'nuevo') {
     setIsLoading(true);
 
-    UsuariosService.getById(Number(id)).then((result) => {
-      console.log("UsuariosDetail::useEffect::response:",result);
+    RolesService.getById(Number(id)).then((result) => {
       setIsLoading(false);
 
       if (result instanceof Error) {
         alert(result.message);
-        navigate('/usuarios');
+        navigate('/roles');
       } else {
         setNombre(result.nombre);
 
+          const subrecursosIds = result.recursos
+          ?.flatMap((r: any) => r.subrecursos.map((s: any) => s.id)) || [];
+
         reset({
           nombre: result.nombre || '',
-          correo: result.correo || '',
-          password: result.password || '',
+          descripcion: result.descripcion || '',
           estado: result.estado === true ? 'activo' : 'inactivo',
+          subrecursos: subrecursosIds,
         });
 
-        if (result.roles && result.roles.length > 0) {
-                  //setSelectedRoleId(result.roles[0].id); // 🔹 preseleccionar el primer rol
-                  setValue("rol_id", result.roles[0].id.toString());
-                }
+
 
       }
     });
   } else {
     reset({
       nombre: '',
-      correo: '',
-      password: '',
+      descripcion: '',
       estado: 'activo',
+      subrecursos: [],
     });
   }
 }, [id, setValue, reset, navigate]);
@@ -107,38 +106,37 @@ useEffect(() => {
   const payload = {
     ...data,
     estado: data.estado === 'activo',
-    rol_id: Number(data.rol_id),
+    subrecursos: data.subrecursos,
   };
 
   if (id === 'nuevo') {
-    console.log("UsuariosDetail::handleSave::nuevo");
-    UsuariosService.create(payload).then((result) => {
-      console.log("UsuariosDetail::create::response:",result);
+    
+    RolesService.create(payload).then((result) => {
+      
       setIsLoading(false);
 
       if (result instanceof Error) {
         alert(result.message);
       } else {
-        setSuccessMessage("✅ Usuario registrado correctamente");
+        setSuccessMessage("✅ Rol registrado correctamente");
         if (shouldClose) {
-          navigate('/usuarios');
+          navigate('/roles');
         } else {
-          navigate(`/usuarios/${result}`);
+          navigate(`/roles/${result}`);
         }
       }
     });
   } else {
-    console.log("UsuariosDetail::handleSave::nuevo=false");
-    UsuariosService.updateById(Number(id), payload).then((result) => {
-      console.log("UsuariosDetail::update::response:",result);
+    
+    RolesService.updateById(Number(id), payload).then((result) => {
       setIsLoading(false);
 
       if (result instanceof Error) {
         alert(result.message);
       } else {
-        setSuccessMessage("✅ Usuario actualizado correctamente");
+        setSuccessMessage("✅ Rol actualizado correctamente");
         if (shouldClose) {
-          navigate('/usuarios');
+          navigate('/roles');
         }
       }
     });
@@ -146,7 +144,7 @@ useEffect(() => {
 };
 
   const onSubmit = (data: UserFormData) => {
-    console.log("UsuariosDetail::onSubmit::data:",data);
+    
     handleSave(data, false);
   };
 
@@ -160,8 +158,8 @@ useEffect(() => {
         if (result instanceof Error) {
           alert(result.message);
         } else {
-          alert('Usuario eliminado con éxito!');
-          navigate('/usuarios');
+          alert('Rol eliminado con éxito!');
+          navigate('/roles');
         }
       });
     }
@@ -169,7 +167,7 @@ useEffect(() => {
 
   return (
     <LayoutBaseDePagina
-      titulo={id === 'nuevo' ? 'Nuevo usuario' : nombre}
+      titulo={id === 'nuevo' ? 'Nuevo rol' : nombre}
       barraDeHerramientas={
         <FerramentasDeDetalhe
           textoBotaoNovo="Nuevo"
@@ -178,7 +176,7 @@ useEffect(() => {
           aoClicarEmSalvar={handleSubmit(onSubmit)}
           aoClicarEmSalvarEFechar={handleSubmit(onSubmitAndClose)}
           aoClicarEmApagar={() => handleDelete(Number(id))}
-          aoClicarEmVoltar={() => navigate('/usuarios')}
+          aoClicarEmVoltar={() => navigate('/roles')}
         />
       }
     >
@@ -190,6 +188,12 @@ useEffect(() => {
         {isLoading && <LinearProgress variant="indeterminate" />}
 
         <Typography variant="h6">Información general</Typography>
+
+
+
+
+
+
 
         <Grid container spacing={2} component="div">
           <Grid size={{ xs: 12, sm: 12, md: 6 }} component="div">
@@ -207,31 +211,19 @@ useEffect(() => {
 
           <Grid size={{ xs: 12, sm: 12, md: 6 }} component="div">
             <TextField
-              {...register('correo')}
+              {...register('descripcion')}
               fullWidth
               variant="outlined"
-              label="Email"
-              type="email"
+              label="Descripcion"
               disabled={isLoading}
-              error={!!errors.correo}
-              helperText={errors.correo?.message}
+              error={!!errors.descripcion}
+              helperText={errors.descripcion?.message}
               InputLabelProps={{ shrink: true }}
             />
           </Grid>
 
-          <Grid size={{ xs: 12, sm: 12, md: 6 }} component="div">
-            <TextField
-              {...register('password')}
-              fullWidth
-              variant="outlined"
-              label="Contraseña"
-              type="password"
-              disabled={isLoading}
-              error={!!errors.password}
-              helperText={errors.password?.message}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
+
+
 
         <Grid size={{ xs: 12, sm: 12, md: 6 }} component="div">
             <Controller
@@ -257,35 +249,61 @@ useEffect(() => {
             />
           </Grid>
 
-          <Grid size={{ xs: 12, sm: 12, md: 6 }} component="div">
-            <Controller
-              name="rol_id"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  select
-                  fullWidth
-                  label="Rol"
-                  variant="outlined"
-                  disabled={isLoading}
-                  error={!!errors.rol_id}
-                  helperText={errors.rol_id?.message}
-                  InputLabelProps={{ shrink: true }}
-                >
-                  {roles.map((rol) => (
-                    <MenuItem key={rol.id} value={rol.id.toString()}>
-                      {rol.nombre}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              )}
-            />
-          </Grid>
 
 
 
         </Grid>
+
+
+ <Typography variant="h6" sx={{ mt: 2 }}>
+          Permisos (Recursos y Subrecursos)
+        </Typography>
+
+        {/*  Un solo Controller maneja todos los checkboxes */}
+        <Controller
+          name="subrecursos"
+          control={control}
+          defaultValue={[]}
+          render={({ field }) => (
+            <FormGroup>
+              {recursos.map((recurso) => (
+                <Paper key={recurso.id} sx={{ p: 2, mb: 2 }} variant="outlined">
+                  <Typography variant="subtitle1">{recurso.nombre}</Typography>
+                  {recurso.subrecursos.map((sub) => {
+                    const value = field.value || [];
+                    const checked = value.includes(sub.id);
+                    return (
+                      <FormControlLabel
+                        key={sub.id}
+                        control={
+                          <Checkbox
+                            checked={checked}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                field.onChange([...value, sub.id]);
+                              } else {
+                                field.onChange(
+                                  value.filter((v: number) => v !== sub.id)
+                                );
+                              }
+                            }}
+                          />
+                        }
+                        label={sub.nombre}
+                      />
+                    );
+                  })}
+                </Paper>
+              ))}
+            </FormGroup>
+          )}
+        />
+
+
+
+
+
+
       </Paper>
 
 

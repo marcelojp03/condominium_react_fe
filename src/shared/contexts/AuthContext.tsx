@@ -11,6 +11,8 @@ const AuthContext = createContext({} as IAuthContextData);
 
 const LOCAL_STORAGE_KEY__ACCESS_TOKEN = 'APP_ACCESS_TOKEN';
 
+
+
 interface IAuthProviderProps {
   children: React.ReactNode;
 }
@@ -42,9 +44,12 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
     }
   }, []);
 
+ 
+
   const handleLogout = useCallback(() => {
     localStorage.removeItem(LOCAL_STORAGE_KEY__ACCESS_TOKEN);
     setAccessToken(undefined);
+    
   }, []);
 
   const isAuthenticated = useMemo(() => {

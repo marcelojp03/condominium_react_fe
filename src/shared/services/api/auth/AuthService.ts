@@ -14,11 +14,11 @@ interface IAuthResponse {
   usuario: IUser;
 }
 
-const auth = async (email: string, password: string): Promise<IAuthResponse | Error | any> => {
+const auth = async (correo: string, password: string): Promise<IAuthResponse | Error | any> => {
   try {
     // Realiza una solicitud POST en lugar de GET, ya que estás enviando credenciales
-    const { data } = await Api.post('/auth/login', { email: email, password: password });
-    console.info("RESPONSE: ", data);
+    const { data } = await Api.post('/ad/auth/login', { correo: correo, password: password });
+    console.info("AuthService::RESPONSE: ", data);
     // if (data.status === 'success') {
     //   // Devuelve el token y la información del usuario si el login fue exitoso
     //   return data.data;
@@ -27,13 +27,13 @@ const auth = async (email: string, password: string): Promise<IAuthResponse | Er
     //   return new Error(data.message || 'Error en el login.');
     // }
 
-    if (data.data.code === 0) {
+    if (data.codigo === 0) {
       // Devuelve el token y la información del usuario si el login fue exitoso
       return data;
     } else {
       // Devuelve un error si la respuesta tiene un estado diferente a 'success'
-      //return new Error(data.message || 'Error en el login.');
-      return data;
+      return new Error(data.message || 'Error en el login.');
+      //return data;
     }
   } catch (error:any) {
     if (error.response) {
