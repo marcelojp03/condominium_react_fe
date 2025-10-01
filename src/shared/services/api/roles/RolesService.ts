@@ -1,12 +1,5 @@
 import { IRol, IRolAlta, IRolEdicion } from '@/shared/types/Rol';
-import { Environment } from '../../../environment';
 import { Api } from '../axios-config';
-
-
-type TRolTotalCount = {
-  data: IRol[];
-  totalCount: number;
-}
 
   const getAll = async (): Promise<{ data: IRol[], totalCount: number } | Error> => {
     try {

@@ -10,7 +10,7 @@ import { UsuariosService } from '../../shared/services/api/usuarios/UsuariosServ
 export const Dashboard = () => {
   const [isLoadingCidades, setIsLoadingCidades] = useState(true);
   const [isLoadingPessoas, setIsLoadingPessoas] = useState(true);
-  const [totalCountCidades, setTotalCountCidades] = useState(0);
+  const [totalCountCidades] = useState(0);
   const [totalCountPessoas, setTotalCountPessoas] = useState(0);
 
   useEffect(() => {

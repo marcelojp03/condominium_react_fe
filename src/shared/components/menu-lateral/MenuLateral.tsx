@@ -17,7 +17,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom';
 import { Box } from '@mui/system';
 
-import { useAppThemeContext, useAuthContext, useDrawerContext } from '../../contexts';
+import { useAppThemeContext, useDrawerContext } from '../../contexts';
 import { useMenuContext } from '../../contexts/MenuContext';
 
 import MenuIcon from '@mui/icons-material/Menu';
@@ -80,7 +80,6 @@ export const MenuLateral: React.FC<IMenuLateralProps> = ({ children }) => {
 
   const { isDrawerOpen, toggleDrawerOpen } = useDrawerContext();
   const { toggleTheme } = useAppThemeContext();
-  const { logout } = useAuthContext();
   const navigate = useNavigate();
   const { menu } = useMenuContext();
 
