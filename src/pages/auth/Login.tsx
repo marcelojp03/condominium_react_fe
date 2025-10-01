@@ -1,11 +1,10 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { TextField, Button, Paper, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2';
-import { AuthService } from '../../shared/services/api/auth/AuthService';
-
+import { useAuthContext } from '../../shared/contexts';
 import { useMenuContext } from '../../shared/contexts/MenuContext';
 
 
@@ -20,7 +19,13 @@ type LoginFormData = z.infer<typeof loginSchema>;
 
 export const Login: React.FC = () => {
   const { loadMenu } = useMenuContext();
+  const { login } = useAuthContext(); // ✅ Usar el login del contexto
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Obtener la ruta a la que intentaba acceder antes del login
+  const from = (location.state as any)?.from?.pathname || '/condominio-dashboard';
+  
   const {
     register,
     handleSubmit,
@@ -30,19 +35,19 @@ export const Login: React.FC = () => {
   });
 
   const onSubmit = async (data: LoginFormData) => {
-    const result = await AuthService.auth(data.correo,data.password);
-    console.log("Login::response:",result);
+    // ✅ Usar el login del AuthContext
+    const result = await login(data.correo, data.password);
+    console.log("Login::response:", result);
+    
     if (result instanceof Error) {
       alert(result.message);
+    } else if (result?.codigo === 0) {
+      // ✅ El AuthContext ya guardó el token
+      loadMenu(); // Recarga el menú dinámico
+      // Redirige a la página que intentaba acceder o al dashboard
+      navigate(from, { replace: true });
     } else {
-      if(result.codigo===0){
-          localStorage.setItem('token', result.token);
-          localStorage.setItem('usuario_id', result.usuario_id);
-          loadMenu(); // ✅ recarga el menú dinámico
-          navigate('/condominio-dashboard');
-      }else{
-        alert(result.mensaje);
-      }
+      alert(result?.mensaje || 'Error al iniciar sesión');
     }
   };
 

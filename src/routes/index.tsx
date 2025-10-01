@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { useDrawerContext } from '../shared/contexts';
 import { Login } from '../pages/auth/Login';
-import { LogoutHandler } from '../shared/components/LogoutHandler';
+import { LogoutHandler, PrivateRoute } from '../shared/components';
 import { LayoutBaseDePagina } from '@/shared/layouts';
 import { MenuLateral } from '@/shared/components';
 import { UsuariosList } from '@/pages/usuarios/UsuariosList';
@@ -50,8 +50,14 @@ export const AppRoutes = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/logout" element={<LogoutHandler />} />
 
-      {/* Rutas privadas */}
-      <Route element={<MainLayout />}>
+      {/* Rutas privadas - Protegidas con PrivateRoute */}
+      <Route 
+        element={
+          <PrivateRoute>
+            <MainLayout />
+          </PrivateRoute>
+        }
+      >
         <Route path="/condominio-dashboard" element={<DashboardPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
 
@@ -72,9 +78,8 @@ export const AppRoutes = () => {
 
       </Route>
 
-      {/* Fallback */}
-      {/* <Route path="*" element={<Navigate to="/login" replace />} /> */}
-      <Route path="*" element={<Navigate to="/condominio-dashboard" replace />} />
+      {/* Fallback - Redirige a login si no está autenticado */}
+      <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );
 };
