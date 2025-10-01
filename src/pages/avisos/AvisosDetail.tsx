@@ -153,7 +153,7 @@ useEffect(() => {
 
   return (
     <LayoutBaseDePagina
-      titulo={id === 'nuevo' ? 'Nueva unidad' : nombre}
+      titulo={id === 'nuevo' ? 'Nuevo aviso' : nombre}
       barraDeHerramientas={
         <FerramentasDeDetalhe
           textoBotaoNovo="Nuevo"

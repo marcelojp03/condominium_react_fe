@@ -10,7 +10,7 @@ import { AvisosService } from '../../shared/services/api/avisos/AvisosService';
 import { IAvisoResponse } from '@/shared/types/Aviso';
 
 
-export const AvisosList: React.FC = () => {
+export const PlacasList: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { debounce } = useDebounce();
   const navigate = useNavigate();
@@ -65,13 +65,13 @@ export const AvisosList: React.FC = () => {
 
   return (
     <LayoutBaseDePagina
-      titulo='Lista de avisos'
+      titulo='Reconocimientos OCR de placas'
       barraDeHerramientas={
         <FerramentasDaListagem
           mostrarInputBusca
           textoDaBusca={busca}
           textoBotaoNovo='Nuevo'
-          aoClicarEmNovo={() => navigate('/unidades/detalle/nuevo')}
+          aoClicarEmNovo={() => navigate('/placas/detalle/nuevo')}
           aoMudarTextoDeBusca={texto => setSearchParams({ busca: texto, pagina: '1' }, { replace: true })}
         />
       }
@@ -107,7 +107,7 @@ export const AvisosList: React.FC = () => {
               <IconButton size="small" onClick={() => handleDelete(row.idaviso)}>
                 <Icon>delete</Icon>
               </IconButton>
-              <IconButton size="small" onClick={() => navigate(`/avisos/detalle/${row.idaviso}`)}>
+              <IconButton size="small" onClick={() => navigate(`/placas/detalle/${row.idaviso}`)}>
                 <Icon>edit</Icon>
               </IconButton>
             </TableCell>

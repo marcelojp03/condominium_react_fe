@@ -17,6 +17,10 @@ import { ResidentesList } from '@/pages/residentes/ResidentesList';
 import { ResidentesDetail } from '@/pages/residentes/ResidentesDetail';
 import { AvisosList } from '@/pages/avisos/AvisosList';
 import { AvisosDetail } from '@/pages/avisos/AvisosDetail';
+import { FacesList } from '@/pages/faces/FacesList';
+import { FacesDetail } from '@/pages/faces/FacesDetail';
+import { PlacasList } from '@/pages/placas/PlacasList';
+import { PlacasDetail } from '@/pages/placas/PlacasDetail';
 
 const MainLayout = () => {
   const { setDrawerOptions } = useDrawerContext();
@@ -69,6 +73,12 @@ export const AppRoutes = () => {
 
         <Route path="/avisos" element={<AvisosList />} />
         <Route path="/avisos/detalle/:id" element={<AvisosDetail />} />   
+
+        <Route path="/faces" element={<FacesList />} />
+        <Route path="/faces/detalle/:id" element={<FacesDetail />} />  
+
+        <Route path="/placas" element={<PlacasList />} />
+        <Route path="/placas/detalle/:id" element={<PlacasDetail />} />          
 
       </Route>
 
