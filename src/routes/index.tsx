@@ -21,6 +21,7 @@ import { FacesList } from '@/pages/faces/FacesList';
 import { FacesDetail } from '@/pages/faces/FacesDetail';
 import { PlacasList } from '@/pages/placas/PlacasList';
 import { PlacasDetail } from '@/pages/placas/PlacasDetail';
+import { AlertasDetail } from '@/pages/alertas/AlertasDetail';
 
 const MainLayout = () => {
   const { setDrawerOptions } = useDrawerContext();
@@ -80,12 +81,14 @@ export const AppRoutes = () => {
         <Route path="/avisos" element={<AvisosList />} />
         <Route path="/avisos/detalle/:id" element={<AvisosDetail />} />   
 
-        <Route path="/faces" element={<FacesList />} />
+        <Route path="/faces" element={<FacesDetail  />} />
         <Route path="/faces/detalle/:id" element={<FacesDetail />} />  
 
-        <Route path="/placas" element={<PlacasList />} />
+        <Route path="/placas" element={<PlacasDetail/>} />
         <Route path="/placas/detalle/:id" element={<PlacasDetail />} />          
 
+        <Route path="/alertas" element={<AlertasDetail  />} />
+        <Route path="/alertas/detalle/:id" element={<AlertasDetail />} /> 
       </Route>
 
       {/* Fallback - Redirige a login si no está autenticado */}
