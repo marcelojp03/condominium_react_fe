@@ -11,6 +11,12 @@ import { Dashboard } from '@mui/icons-material';
 import { DashboardPage } from '@/pages/condominios';
 import { RolesList } from '@/pages/roles/RolesList';
 import { RolesDetail } from '@/pages/roles/RolesDetail';
+import { UnidadesList } from '@/pages/unidades/UnidadesList';
+import { UnidadesDetail } from '@/pages/unidades/UnidadesDetail';
+import { ResidentesList } from '@/pages/residentes/ResidentesList';
+import { ResidentesDetail } from '@/pages/residentes/ResidentesDetail';
+import { AvisosList } from '@/pages/avisos/AvisosList';
+import { AvisosDetail } from '@/pages/avisos/AvisosDetail';
 
 const MainLayout = () => {
   const { setDrawerOptions } = useDrawerContext();
@@ -55,6 +61,14 @@ export const AppRoutes = () => {
         <Route path="/roles" element={<RolesList />} />
         <Route path="/roles/detalle/:id" element={<RolesDetail />} />        
 
+        <Route path="/unidades" element={<UnidadesList />} />
+        <Route path="/unidades/detalle/:id" element={<UnidadesDetail />} />   
+
+        <Route path="/residentes" element={<ResidentesList />} />
+        <Route path="/residentes/detalle/:id" element={<ResidentesDetail />} />         
+
+        <Route path="/avisos" element={<AvisosList />} />
+        <Route path="/avisos/detalle/:id" element={<AvisosDetail />} />   
 
       </Route>
 
