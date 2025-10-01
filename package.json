@@ -6,9 +6,13 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "build:dev": "tsc && vite build --mode development",
+    "build:prod": "tsc && vite build --mode production",
     "preview": "vite preview",
     "test": "vitest",
-    "mock": "json-server -w -p 3333 ./mock/database.json"
+    "mock": "json-server -w -p 3333 ./mock/database.json",
+    "deploy": "powershell -ExecutionPolicy Bypass -File ./deploy.ps1",
+    "deploy:custom": "powershell -ExecutionPolicy Bypass -File ./deploy.ps1 -BucketName"
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",

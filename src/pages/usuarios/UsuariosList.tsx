@@ -5,7 +5,8 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { FerramentasDaListagem } from '../../shared/components';
 import { LayoutBaseDePagina } from '../../shared/layouts';
 import { useDebounce } from '../../shared/hooks';
-import { IListaUsuarios, UsuariosService } from '../../shared/services/api/usuarios/UsuariosService';
+import { UsuariosService } from '../../shared/services/api/usuarios/UsuariosService';
+import { IUsuarioResponse } from '../../shared/types/Usuario';
 
 
 export const UsuariosList: React.FC = () => {
@@ -13,7 +14,7 @@ export const UsuariosList: React.FC = () => {
   const { debounce } = useDebounce();
   const navigate = useNavigate();
 
-  const [rows, setRows] = useState<IListaUsuarios[]>([]);
+  const [rows, setRows] = useState<IUsuarioResponse[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [totalCount, setTotalCount] = useState(0);
 

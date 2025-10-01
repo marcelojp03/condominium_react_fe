@@ -11,10 +11,18 @@
 
 # misc
 .DS_Store
+
+# Environment files
+.env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+# Mantener los archivos .env.development y .env.production en el repo
+# pero asegúrate de NO incluir secretos reales en ellos
+
+# Deploy configuration (puede contener información sensible)
+deploy.config.ps1
 
 npm-debug.log*
 yarn-debug.log*

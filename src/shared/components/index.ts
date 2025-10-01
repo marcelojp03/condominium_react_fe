@@ -7,3 +7,5 @@ export * from './login/Login';
 export * from './data-table';
 export * from './status-chip';
 export * from './confirm-dialog';
+export * from './LogoutHandler';
+export * from './PrivateRoute';

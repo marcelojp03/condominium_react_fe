@@ -1,13 +1,6 @@
 import { IRol } from '@/shared/types/Rol';
-import { Environment } from '../../../environment';
 import { Api } from '../axios-config';
 import { IUsuarioAlta, IUsuarioResponse } from '@/shared/types/Usuario';
-
-
-
-
-
-
 
 export interface IDetalleUsuarios {
     id?: number;
@@ -18,12 +11,7 @@ export interface IDetalleUsuarios {
     roles: IRol[];
 }
 
-type TContactoTotalCount = {
-  data: IUsuarioResponse[];
-  totalCount: number;
-}
-
-  const getAll = async (): Promise<{ data: IUsuarioResponse[], totalCount: number } | Error> => {
+const getAll = async (): Promise<{ data: IUsuarioResponse[], totalCount: number } | Error> => {
     try {
         const { data } = await Api.get('/ad/usuarios/');
         console.info("USERS RESPONSE: ", data);
